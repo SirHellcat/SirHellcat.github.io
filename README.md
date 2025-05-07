@@ -3,7 +3,7 @@
 <html>
 
 <head>
-  <tittle> Felipe Amador </tittle>
+  <title> Felipe Amador </title>
 </head>
 
   <body>
