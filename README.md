@@ -1,8 +1,11 @@
-This is a test
-
-I'm just trying to figure out how to make a page on GitHub pages
+<!DOCTYPE html>
 
 <html>
+
+<head>
+  <tittle> Felipe Amador </tittle>
+</head>
+
   <body>
    <p> This is another test. </p>
   </body>
@@ -11,3 +14,5 @@ I'm just trying to figure out how to make a page on GitHub pages
    <p> Si puedes leer esto amorchi, te amooooooo. </p>
   </body>
 </html>
+
+<!--este es un comentario-->
