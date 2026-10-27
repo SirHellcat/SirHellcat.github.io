@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller de Medicina Legal & Ciencias Forenses 4.0</title>
+    
+    <!-- Fuentes de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-main: #0B0F17;
+            --bg-card: #151C28;
+            --bg-card-hover: #1E2738;
+            --border-color: #232D3F;
+            --border-highlight: #3B82F6;
+            
+            --text-primary: #F3F4F6;
+            --text-secondary: #9CA3AF;
+            --text-muted: #6B7280;
+            
+            --accent-blue: #3B82F6;
+            --accent-cyan: #06B6D4;
+            --accent-emerald: #10B981;
+            --accent-amber: #F59E0B;
+            --accent-purple: #8B5CF6;
+            
+            --glow-blue: rgba(59, 130, 246, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Header / Navbar */
+        header {
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-icon {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            padding: 0.6rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px var(--glow-blue);
+        }
+
+        .brand-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #FFFFFF;
+        }
+
+        .brand-text p {
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .progress-badge {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-val {
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        .btn-restart {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-restart:hover {
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Layout Main */
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Dashboard Grid Top */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .dash-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.25rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s ease;
+        }
+
+        .dash-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--border-color);
+        }
+
+        .dash-card.active::before { background: var(--accent-blue); }
+        .dash-card.next::before { background: var(--accent-purple); }
+        .dash-card.docs::before { background: var(--accent-emerald); }
+        .dash-card.reqs::before { background: var(--accent-amber); }
+
+        .dash-card-header {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dash-card-body {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Section Protocol Steps */
+        .protocol-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.75rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+
+        .timeline-step {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .timeline-step:hover {
+            border-color: var(--border-highlight);
+            background-color: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .timeline-step.completed {
+            border-color: var(--accent-emerald);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .timeline-step.current {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 12px var(--glow-blue);
+            background: rgba(59, 130, 246, 0.08);
+        }
+
+        .step-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .step-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Content Viewer / Workspace */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .panel-box h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .task-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 0.85rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .task-item:hover {
+            background-color: var(--bg-card-hover);
+        }
+
+        .task-checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 2px solid var(--text-muted);
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .task-item.checked .task-checkbox {
+            background-color: var(--accent-emerald);
+            border-color: var(--accent-emerald);
+        }
+
+        .task-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .task-item.checked .task-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .ai-assistant-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.8));
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .ai-badge {
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--accent-cyan);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .ai-box {
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="brand-container">
+            <div class="brand-icon">
+                <i data-lucide="scale" style="color: white; width: 22px; height: 22px;"></i>
+            </div>
+            <div class="brand-text">
+                <h1>Taller de Medicina Legal & Ciencias Forenses 4.0</h1>
+                <p>Gobernanza de IA & Protocolo Pericial de 7 Fases (Res. 02463/2026)</p>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <div class="progress-badge">
+                <span class="progress-text">Progreso Global:</span>
+                <span class="progress-val" id="progress-percentage">0% Completado</span>
+            </div>
+            <button class="btn-restart" onclick="resetProgress()">
+                <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i> Reiniciar
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main>
+        <!-- Top Dashboard Metrics -->
+        <div class="dashboard-grid">
+            <div class="dash-card active">
+                <div class="dash-card-header">
+                    <span>Fase Actual</span>
+                    <i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent-blue);"></i>
+                </div>
+                <div class="dash-card-body" id="current-phase-name">Fase 1: Recepción & Cadena de Custodia</div>
+            </div>
+
+            <div class="dash-card next">
+                <div class="dash-card-header">
+                    <span>Siguiente Paso</span>
+                    <i data-lucide="arrow-right-circle" style="width: 16px; height: 16px; color: var(--accent-purple);"></i>
+                </div>
+                <div class="dash-card-body" id="next-phase-name">Fase 2: Análisis Preliminar con IA</div>
+            </div>
+
+            <div class="dash-card docs">
+                <div class="dash-card-header">
+                    <span>Doc. Disponible</span>
+                    <i data-lucide="file-text" style="width: 16px; height: 16px; color: var(--accent-emerald);"></i>
+                </div>
+                <div class="dash-card-body">3 Protocolos / Plantillas</div>
+            </div>
+
+            <div class="dash-card reqs">
+                <div class="dash-card-header">
+                    <span>Insumos Requeridos</span>
+                    <i data-lucide="folder-check" style="width: 16px; height: 16px; color: var(--accent-amber);"></i>
+                </div>
+                <div class="dash-card-body">Firma Digital & Hash SHA-256</div>
+            </div>
+        </div>
+
+        <!-- Protocol Timeline (7 Fases) -->
+        <section class="protocol-section">
+            <div class="section-header">
+                <h2><i data-lucide="git-commit" style="color: var(--accent-cyan);"></i> Protocolo Pericial de 7 Fases</h2>
+            </div>
+            
+            <div class="timeline-grid">
+                <div class="timeline-step current" onclick="selectPhase(1)">
+                    <div class="step-number">FASE 01</div>
+                    <div class="step-title">Recepción & Custodia</div>
+                </div>
+                <div class="timeline-step" onclick="selectPhase(2)">
+                    <div class="step-number">FASE 02</div>
+                    <div class="step-title">Análisis de IA</div>
+                </div>
+                <div class="timeline-step" onclick="selectPhase(3)">
+                    <div class="step-number">FASE 03</div>
+                    <div class="step-title">Examen Físico/Digital</div>
+                </div>
+                <div class="timeline-step" onclick="selectPhase(4)">
+                    <div class="step-number">FASE 04</div>
+                    <div class="step-title">Validación Algorítmica</div>
+                </div>
+                <div class="timeline-step" onclick="selectPhase(5)">
+                    <div class="step-number">FASE 05</div>
+                    <div class="step-title">Síntesis Pericial</div>
+                </div>
+                <div class="timeline-step" onclick="selectPhase(6)">
+                    <div class="step-number">FASE 06</div>
+                    <div class="step-title">Auditoría de Sesgo</div>
+                </div>
+                <div class="timeline-step" onclick="selectPhase(7)">
+                    <div class="step-number">FASE 07</div>
+                    <div class="step-title">Dictamen Final</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Dynamic Tasks & AI Assistant -->
+        <div class="workspace-grid">
+            <div class="panel-box">
+                <h3><i data-lucide="list-todo" style="color: var(--accent-blue);"></i> Lista de Verificación Pericial</h3>
+                <ul class="task-list" id="task-container">
+                    <!-- Dynamic tasks inserted via Javascript -->
+                </ul>
+            </div>
+
+            <div class="ai-assistant-card">
+                <div class="ai-header">
+                    <i data-lucide="bot" style="color: var(--accent-cyan); width: 24px; height: 24px;"></i>
+                    <h3 style="margin: 0;">Asistente de Gobernanza</h3>
+                    <span class="ai-badge">IA Forense</span>
+                </div>
+                <div class="ai-box" id="ai-guidance">
+                    <strong>Sugerencia de Protocolo:</strong> Asegúrese de verificar la integridad del archivo multimedia y generar el Hash SHA-256 antes de procesar los datos en el modelo pericial.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Data for the 7 Phases
+        const phasesData = {
+            1: {
+                name: "Fase 1: Recepción & Cadena de Custodia",
+                next: "Fase 2: Análisis Preliminar con IA",
+                guidance: "Verifique el registro de custodia. Registre la hora de recepción, firma del custodia y genere el Hash SHA-256 de las evidencias físicas/digitales.",
+                tasks: [
+                    "Verificación de sellos de seguridad y embalaje.",
+                    "Generación y validación de Hash de integridad digital.",
+                    "Registro en el sistema unificado de cadena de custodia."
+                ]
+            },
+            2: {
+                name: "Fase 2: Análisis Preliminar con IA",
+                next: "Fase 3: Examen Físico / Digital Estratégico",
+                guidance: "Asegúrese de cargar los modelos analíticos aprobados por la Resolución 02463/2026. Revise que la tasa de desvío sea menor a 0.05%.",
+                tasks: [
+                    "Carga de datos al motor de visión/análisis computacional.",
+                    "Ejecución de detección preliminar de patrones o anomalías.",
+                    "Documentación de parámetros algorítmicos utilizados."
+                ]
+            },
+            3: {
+                name: "Fase 3: Examen Físico / Digital Estratégico",
+                next: "Fase 4: Validación Algorítmica y Calibración",
+                guidance: "Realice la inspección macroscópica/microscópica o informática detallada para contrastar los resultados preliminares del software.",
+                tasks: [
+                    "Examen pericial directo por el forense a cargo.",
+                    "Toma de fotografías contrastadas y métricas de escala.",
+                    "Cruce de hallazgos físicos con lecturas del sistema."
+                ]
+            },
+            4: {
+                name: "Fase 4: Validación Algorítmica",
+                next: "Fase 5: Síntesis Pericial",
+                guidance: "Valide si existen falsos positivos o falsos negativos en el modelo de Inteligencia Artificial.",
+                tasks: [
+                    "Prueba de explicabilidad sobre predicciones del algoritmo.",
+                    "Ajuste y calibración con métricas forenses estandarizadas.",
+                    "Verificación de ausencia de alucinaciones en modelos de texto/visión."
+                ]
+            },
+            5: {
+                name: "Fase 5: Síntesis Pericial",
+                next: "Fase 6: Auditoría de Sesgo",
+                guidance: "Consolide la evidencia en una estructura narrativa lógica respetando el debido proceso técnico-científico.",
+                tasks: [
+                    "Integración de opiniones técnicas e interpretaciones.",
+                    "Correlación de causa y efecto según protocolos forenses.",
+                    "Borrador estructurado del dictamen judicial."
+                ]
+            },
+            6: {
+                name: "Fase 6: Auditoría de Sesgo y Ética",
+                next: "Fase 7: Dictamen Final y Firma Digital",
+                guidance: "Verifique que la interpretación cumpla con los estándares de neutralidad, objetividad e imparcialidad exigidos por ley.",
+                tasks: [
+                    "Evaluación de sesgos algorítmicos o metodológicos.",
+                    "Control de calidad por un segundo perito revisor (peer-review).",
+                    "Aprobación de la matriz de gobernanza ética."
+                ]
+            },
+            7: {
+                name: "Fase 7: Dictamen Final y Firma",
+                next: "Conclusión de Protocolo",
+                guidance: "Firme digitalmente el expediente final e incorpórelo al repositorio oficial judicial.",
+                tasks: [
+                    "Estampado de firma digital criptográfica.",
+                    "Cierre del registro de cadena de custodia.",
+                    "Envío de informe al despacho judicial correspondiente."
+                ]
+            }
+        };
+
+        let currentPhaseId = 1;
+        let completedTasks = new Set();
+
+        // Initialize Icons & First Phase
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            loadPhase(1);
+        });
+
+        function selectPhase(phaseId) {
+            currentPhaseId = phaseId;
+            
+            // Update Active Step Styling
+            const steps = document.querySelectorAll('.timeline-step');
+            steps.forEach((step, idx) => {
+                step.classList.remove('current');
+                if (idx + 1 === phaseId) {
+                    step.classList.add('current');
+                }
+            });
+
+            loadPhase(phaseId);
+        }
+
+        function loadPhase(phaseId) {
+            const data = phasesData[phaseId];
+            
+            document.getElementById('current-phase-name').innerText = data.name;
+            document.getElementById('next-phase-name').innerText = data.next;
+            document.getElementById('ai-guidance').innerHTML = `<strong>Sugerencia de Protocolo:</strong> ${data.guidance}`;
+
+            const taskContainer = document.getElementById('task-container');
+            taskContainer.innerHTML = '';
+
+            data.tasks.forEach((task, index) => {
+                const taskId = `p${phaseId}_t${index}`;
+                const isChecked = completedTasks.has(taskId);
+
+                const li = document.createElement('li');
+                li.className = `task-item ${isChecked ? 'checked' : ''}`;
+                li.onclick = () => toggleTask(taskId, li);
+
+                li.innerHTML = `
+                    <div class="task-checkbox">
+                        ${isChecked ? '<i data-lucide="check" style="width:14px; height:14px; color:white;"></i>' : ''}
+                    </div>
+                    <span class="task-text">${task}</span>
+                `;
+                taskContainer.appendChild(li);
+            });
+
+            lucide.createIcons();
+            updateProgress();
+        }
+
+        function toggleTask(taskId, element) {
+            if (completedTasks.has(taskId)) {
+                completedTasks.delete(taskId);
+                element.classList.remove('checked');
+            } else {
+                completedTasks.add(taskId);
+                element.classList.add('checked');
+            }
+            
+            // Update checkbox icon
+            const checkbox = element.querySelector('.task-checkbox');
+            if (completedTasks.has(taskId)) {
+                checkbox.innerHTML = '<i data-lucide="check" style="width:14px; height:14px; color:white;"></i>';
+            } else {
+                checkbox.innerHTML = '';
+            }
+            
+            lucide.createIcons();
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalTasks = 21; // 7 phases * 3 tasks
+            const percentage = Math.round((completedTasks.size / totalTasks) * 100);
+            document.getElementById('progress-percentage').innerText = `${percentage}% Completado`;
+
+            // Mark completed phases
+            for (let i = 1; i <= 7; i++) {
+                const phaseTasks = phasesData[i].tasks.map((_, idx) => `p${i}_t${idx}`);
+                const allDone = phaseTasks.every(t => completedTasks.has(t));
+                const stepElem = document.querySelectorAll('.timeline-step')[i - 1];
+                if (allDone) {
+                    stepElem.classList.add('completed');
+                } else {
+                    stepElem.classList.remove('completed');
+                }
+            }
+        }
+
+        function resetProgress() {
+            completedTasks.clear();
+            loadPhase(currentPhaseId);
+        }
+    </script>
+</body>
+</html>
